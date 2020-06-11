@@ -2,7 +2,93 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0dba93a-b31a-4056-bbc3-498147988725" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/test_viet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/coco/first_experiment.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convert/onnx2openvino.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convert/torch2onnx.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/COCO_data_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/ImageAugmentation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/heatmap.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/preprocessing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/prn_data_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/coco_data/prn_gaussian.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/data_parallel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/dataloader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/genANNO.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/genCOCOMask.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/genJSON.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/models/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/output/pic1_canvas.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/output/pic2_canvas.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/test_images/test.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/test_images/test1.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/inference_onnx.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/multipose_coco_eval.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/multipose_detection_val.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/multipose_keypoint_val.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/multipose_prn_val.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/multipose_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluate/tester.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/gpu_nms.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/gpu_nms.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/gpu_nms.pyx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nms_kernel.cu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nums_py.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nums_py1.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nums_py1.pyx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nums_py2.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/nums_py2.pyx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/setup1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/nms/setup2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/setup3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/NMS/test_num.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/build.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/_ext/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/_ext/nms/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/_ext/nms/_nms.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/build.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/pth_nms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/cuda/nms_kernel.cu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/cuda/nms_kernel.cu.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/cuda/nms_kernel.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/nms.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/nms.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/nms_cuda.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/nms/src/nms_cuda.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/log.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/meter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/path.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/timer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobilenet.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/multipose_environment.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/anchors.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/fpn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/joint_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/losses.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/net_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/posenet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resnet.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_viet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/batch_processor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/multipose_detection_train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/multipose_keypoint_train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/multipose_prn_train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/trainer.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +106,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1bvNdqZQppJQH53X1TOkj1Rkhfi" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -28,9 +116,26 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../lightweight_openpose" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/MultiPoseNet" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/models/backbone" />
+      <recent name="$PROJECT_DIR$/src/utils" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/tests" />
+      <recent name="$PROJECT_DIR$/refactor/utils" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/refactor/configs" />
+      <recent name="$PROJECT_DIR$/refactor/src/runner" />
+      <recent name="$PROJECT_DIR$/refactor/src/utils" />
+      <recent name="$PROJECT_DIR$/refactor/src/models" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="test_viet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -46,7 +151,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_viet.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_viet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -89,7 +194,10 @@
       <workItem from="1590975383932" duration="6818000" />
       <workItem from="1590986097875" duration="15340000" />
       <workItem from="1591063264745" duration="27106000" />
-      <workItem from="1591234276756" duration="27758000" />
+      <workItem from="1591234276756" duration="38757000" />
+      <workItem from="1591580808966" duration="28171000" />
+      <workItem from="1591667043161" duration="27036000" />
+      <workItem from="1591840095334" duration="10123000" />
     </task>
     <servers />
   </component>
@@ -97,18 +205,26 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="455" y="133" width="1000" height="839" key="#Deployment" timestamp="1589786681620">
+    <state x="455" y="133" width="1000" height="839" key="#Deployment" timestamp="1591607322806">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="455" y="133" width="1000" height="839" key="#Deployment/0.27.1920.1053@0.27.1920.1053" timestamp="1589786681620" />
-    <state x="430" y="116" width="1040" height="873" key="#SSH_Configurations" timestamp="1589784789026">
+    <state x="455" y="133" width="1000" height="839" key="#Deployment/0.27.1920.1053@0.27.1920.1053" timestamp="1591607322806" />
+    <state x="472" y="159" width="965" height="786" key="#Options" timestamp="1591607425256">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="430" y="116" width="1040" height="873" key="#SSH_Configurations/0.27.1920.1053@0.27.1920.1053" timestamp="1589784789026" />
-    <state x="690" y="253" width="530" height="598" key="FileChooserDialogImpl" timestamp="1590551934767">
+    <state x="472" y="159" width="965" height="786" key="#Options/0.27.1920.1053@0.27.1920.1053" timestamp="1591607425256" />
+    <state x="430" y="116" width="1040" height="873" key="#SSH_Configurations" timestamp="1591607304560">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="690" y="253" width="530" height="598" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1590551934767" />
+    <state x="430" y="116" width="1040" height="873" key="#SSH_Configurations/0.27.1920.1053@0.27.1920.1053" timestamp="1591607304560" />
+    <state x="146" y="339" width="657" height="427" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1591586488898">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="146" y="339" width="657" height="427" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1591586488898" />
+    <state x="690" y="253" width="530" height="598" key="FileChooserDialogImpl" timestamp="1591698662376">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="690" y="253" width="530" height="598" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1591698662376" />
     <state width="1864" height="264" key="GridCell.Tab.0.bottom" timestamp="1591097148156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -125,18 +241,18 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1864" height="264" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1591097148155" />
-    <state x="324" y="100" key="SettingsEditor" timestamp="1591252881081">
+    <state x="324" y="100" key="SettingsEditor" timestamp="1591674458699">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="324" y="100" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1591252881081" />
-    <state x="8" y="245" width="759" height="752" key="find.popup" timestamp="1591265389699">
+    <state x="324" y="100" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1591674458699" />
+    <state x="8" y="245" width="759" height="752" key="find.popup" timestamp="1591840617152">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="8" y="245" width="759" height="752" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1591265389699" />
-    <state x="833" y="224" key="ftp.server.browser" timestamp="1589785417926">
+    <state x="8" y="245" width="759" height="752" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1591840617152" />
+    <state x="833" y="224" key="ftp.server.browser" timestamp="1591607321799">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="833" y="224" key="ftp.server.browser/0.27.1920.1053@0.27.1920.1053" timestamp="1589785417926" />
+    <state x="833" y="224" key="ftp.server.browser/0.27.1920.1053@0.27.1920.1053" timestamp="1591607321799" />
     <state x="59" y="45" width="840" height="1034" key="search.everywhere.popup" timestamp="1590722562907">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -144,6 +260,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/datasets/coco_data/preprocessing.py</url>
+          <line>11</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

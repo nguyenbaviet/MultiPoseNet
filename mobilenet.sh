@@ -1,1 +1,0 @@
-CUDA_VISIBLE_DEVICES=2,3 python training/multipose_detection_train.py --backbone 'mobilenetv2'
