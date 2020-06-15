@@ -1,0 +1,4 @@
+model: 'detectionANDkeypoints' #prn
+backbone: 'resnet101'
+output_path: 'resnet101.onnx'
+checkpoint: './demo/models/ckpt_baseline_resnet101.h5'

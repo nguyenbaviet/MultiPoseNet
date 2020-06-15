@@ -2,7 +2,7 @@ import os, sys
 sys.path.append(os.getcwd())
 
 from src.models.base import PoseNet
-from src.runner.tester import Tester
+from serving.tester import Tester
 from src.utils.utils import init_Test_params
 import yaml
 
@@ -19,6 +19,6 @@ def main(cfg):
     tester = Tester(model, params)
     tester.test()
 if __name__ == '__main__':
-    with open('configs/val.yaml') as f:
+    with open('configs/test.yaml') as f:
         cfg = yaml.full_load(f)
     main(cfg)

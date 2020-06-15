@@ -185,7 +185,7 @@ def init_train_params(cfg):
 
 class TestParams(object):
 
-    trunk = 'resnet101'  # select the model
+    trunk = 'resnet101'  # select the convert
     coeff = 2
     in_thres = 0.21
 
@@ -206,12 +206,15 @@ class TestParams(object):
     print_freq = 20
 def init_Test_params(cfg):
     params = TestParams()
-    params.output_path = cfg['VAL']['output_path']
-    params.video_path = cfg['VAL']['video_path']
     params.gpus = cfg['COMMON']['GPUS']
     params.ckpt = cfg['VAL']['ckpt']
-    params.subnet_name = cfg['MODEL']['subnet']
-    params.coco_result_filename = cfg['VAL']['json_result_path']
-    params.batch_size = cfg['VAL']['batch_size']
     params.coco_root = cfg['DATASET']['coco_root']
+
+    if cfg['VAL']['dataset_type'] == 'val':
+        params.subnet_name = cfg['MODEL']['subnet']
+        params.batch_size = cfg['VAL']['batch_size']
+    else:
+        params.output_path = cfg['VAL']['output_path']
+        params.video_path = cfg['VAL']['video_path']
+        params.coco_result_filename = cfg['VAL']['json_result_path']
     return params

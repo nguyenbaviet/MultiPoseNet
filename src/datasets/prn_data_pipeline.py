@@ -2,7 +2,6 @@ import math
 import numpy as np
 from skimage.filters import gaussian
 from torch.utils.data import Dataset
-from src.datasets.coco_data.heatmap import putGaussianMaps
 
 params_transform = dict()
 params_transform['sigma'] = 7.0

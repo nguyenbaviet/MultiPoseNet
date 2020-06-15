@@ -6,29 +6,18 @@ import torch.nn as nn
 import torch.nn.functional as F
 from abc import abstractmethod
 
-from collections import OrderedDict
 from torch.nn import init
-
-from src.models.backbone.mobilenetv2 import MobilenetV2
-from src.models.backbone.resnet import Resnet
+from src.models.backbone.fpn import FPN
 from src.utils.utils import BBoxTransform, ClipBoxes
 from src.utils.anchors import Anchors
 import src.utils.losses as losses
 
-from src.utils.modules import ClassificationModel, nms, build_names, RegressionModel, Concat, Base_PRN
+from src.utils.modules import ClassificationModel, nms, RegressionModel, Concat, Base_PRN
 
 class PoseNet(nn.Module):
     def __init__(self, backbone, node_count=1024, coeff=2):
         super(PoseNet, self).__init__()
-        if backbone == 'resnet50':
-            self.fpn = Resnet([3,4,6,3])
-        elif backbone == 'resnet101':
-            self.fpn = Resnet([3,4,23,3])
-        elif backbone == 'mobilenetv2':
-            self.fpn = MobilenetV2()
-        else:
-            raise ValueError('Do not support for backbone %s. Expect backbone in [resnet50, resnet101, mobilenetv2]' %backbone)
-
+        self.fpn = FPN(backbone)
         ##################################################################################
         # keypoints subnet
         # intermediate supervision
@@ -151,12 +140,12 @@ class PoseNet(nn.Module):
         return predict_keypoint, [nms_scores, nms_class, transformed_anchors[0, anchors_nms_idx, :]]
 
     def _predict_prn(self, x):
-        res = self.flatten(x)
-        out = self.drop(F.relu(self.dens1(res)))
-        out = self.drop(F.relu(self.bneck(out)))
-        out = F.relu(self.dens2(out))
-        out = self.add(out, res)
-        out = self.softmax(out)
-        out = out.view(out.size()[0], self.height, self.width, 17)
+        res = self.prn.flatten(x)
+        out = self.prn.drop(F.relu(self.prn.dens1(res)))
+        out = self.prn.drop(F.relu(self.prn.bneck(out)))
+        out = F.relu(self.prn.dens2(out))
+        out = self.prn.add(out, res)
+        out = self.prn.softmax(out)
+        out = out.view(out.size()[0], self.prn.height, self.prn.width, 17)
 
         return out

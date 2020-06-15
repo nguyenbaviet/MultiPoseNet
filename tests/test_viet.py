@@ -9,10 +9,6 @@ class A:
 class B(A):
     def __init__(self):
         super().__init__()
-    def printer(self):
-        print('nothing')
 if __name__ == '__main__':
-    c = [5, 6]
-    def printer(*input):
-        print(input)
-    printer(c)
+    b = B()
+    b.printer()

@@ -1,14 +1,14 @@
 COMMON:
-  GPUS: [0]
+  GPUS: [0, 1, 2]
   saved_dir: '/home/vietnguyen/MultiPoseNet/extra/models/resnet50_detection_subnet/'
 DATASET:
   data_dir: '/mnt/hdd10tb/Datasets/COCO2017/images'
   mask_dir: '/mnt/hdd10tb/Datasets/COCO2017/viet_data/'
   json_path: '/home/vietnguyen/MultiPoseNet/COCO.json'
 FROZEN_WEIGHTS_LIST:
-  backbone: ['conv1', 'bn1', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layers',
-             'my_conv1', 'my_conv2', 'my_conv3', 'my_conv4']
-#  backbone: ['backbone']
+#  backbone: ['conv1', 'bn1', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layers',
+#             'my_conv1', 'my_conv2', 'my_conv3', 'my_conv4']
+  backbone: ['backbone']
   detection:
       backbone: ['conv6', 'conv7', 'latlayer1', 'latlayer2', 'latlayer3', 'toplayer0', 'toplayer1', 'toplayer2']
       detection: ['regressionModel', 'classificationModel']
@@ -18,16 +18,16 @@ FROZEN_WEIGHTS_LIST:
                   'upsample2', 'upsample3', 'conv2', 'convfin', 'convfin_k2', 'convfin_k3', 'convfin_k4', 'convfin_k5']
   prn: ['prn']
 
-FROZEN_MODULES: ['backbone', 'detection', 'keypoints']
+FROZEN_MODULES: ['prn', 'detection']
 
 MODEL:
-  subnet: 'prn'
-  backbone: 'resnet50'
-  inp_size: 608 #kp + prn - 480, detection - 608
+  subnet: 'keypoints'
+  backbone: 'mobilenetv2'
+  inp_size: 480 #kp + prn - 480, detection - 608
   feat_stride: 4
 
 TRAIN:
-  num_epochs: 50
+  num_epochs: 2
   batch_size: 8
   optimizer: 'adam'
   weight_decay: 0.000

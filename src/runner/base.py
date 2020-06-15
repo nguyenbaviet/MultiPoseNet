@@ -1,13 +1,8 @@
 from __future__ import print_function
 
-import os
 import cv2
 import math
 import datetime
-import json
-from collections import OrderedDict
-from src.utils.joint_utils import get_joint_list, plot_result
-from tqdm import tqdm
 
 import torch
 import torch.nn as nn
@@ -15,14 +10,12 @@ from utils.lib.utils.log import logger
 from utils.lib.utils import meter as meter_utils
 import src.utils.net_utils as net_utils
 from utils.lib.utils.timer import Timer
-from src.datasets.coco_data.preprocessing import resnet_preprocess
-from src.datasets.coco_data.prn_gaussian import crop
+from src.datasets.utils.preprocessing import resnet_preprocess
+from src.datasets.utils.prn_gaussian import crop
 from src.utils.utils import TestParams
 
 from skimage.filters import gaussian
 
-from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
 
 import numpy as np
 
@@ -82,7 +75,7 @@ def crop_with_factor(im, dest_size, factor=32, pad_val=0, basedon='min'):
 
     return im_padded, im_scale, im.shape
 
-class Tester(object):
+class Base(object):
 
     TestParams = TestParams
 
@@ -94,7 +87,7 @@ class Tester(object):
         self.val_data = val_data if val_data else None
         self.batch_processor = batch_processor if batch_processor else None
 
-        # load model
+        # load convert
         self.model = model
         ckpt = self.params.ckpt
 
@@ -105,139 +98,6 @@ class Tester(object):
         self.model = self.model.cuda() if torch.cuda.is_available() else self.model
         self.model.eval()
         self.model.module.freeze_bn()
-    def coco_eval(self):
-
-        coco_val = os.path.join(self.params.coco_root, 'annotations/person_keypoints_val2017.json')
-        coco = COCO(coco_val)
-        img_ids = coco.getImgIds(catIds=[1])
-
-        multipose_results = []
-        coco_order = [0, 14, 13, 16, 15, 4, 1, 5, 2, 6, 3, 10, 7, 11, 8, 12, 9]
-
-        for img_id in tqdm(img_ids):
-
-            img_name = coco.loadImgs(img_id)[0]['file_name']
-
-            oriImg = cv2.imread(os.path.join(self.params.coco_root, 'images/val2017/', img_name)).astype(np.float32)
-            multiplier = self._get_multiplier(oriImg)
-
-            # Get results of original image
-            orig_heat, orig_bbox_all = self._get_outputs(multiplier, oriImg)
-
-            # Get results of flipped image
-            swapped_img = oriImg[:, ::-1, :]
-            flipped_heat, flipped_bbox_all = self._get_outputs(multiplier, swapped_img)
-
-            # compute averaged heatmap
-            heatmaps = self._handle_heat(orig_heat, flipped_heat)
-
-            # segment_map = heatmaps[:, :, 17]
-            param = {'thre1': 0.1, 'thre2': 0.05, 'thre3': 0.5}
-            joint_list = get_joint_list(oriImg, param, heatmaps[:, :, :18], 1)
-            joint_list = joint_list.tolist()
-
-            joints = []
-            for joint in joint_list:
-                if int(joint[-1]) != 1:
-                    joint[-1] = max(0, int(joint[-1]) - 1)
-                    joints.append(joint)
-            joint_list = joints
-
-            prn_result = self.prn_process(joint_list, orig_bbox_all[1], img_name, img_id)
-            for result in prn_result:
-                keypoints = result['keypoints']
-                coco_keypoint = []
-                for i in range(17):
-                    coco_keypoint.append(keypoints[coco_order[i] * 3])
-                    coco_keypoint.append(keypoints[coco_order[i] * 3 + 1])
-                    coco_keypoint.append(keypoints[coco_order[i] * 3 + 2])
-                result['keypoints'] = coco_keypoint
-                multipose_results.append(result)
-
-        ann_filename = self.params.coco_result_filename
-        with open(ann_filename, "w") as f:
-            json.dump(multipose_results, f, indent=4)
-        # load results in COCO evaluation tool
-        coco_pred = coco.loadRes(ann_filename)
-        # run COCO evaluation
-        if self.params.subnet_name == 'detection':
-            coco_eval = COCOeval(coco, coco_pred, 'bbox')
-        elif self.params.subnet_name == 'keypoints':
-            coco_eval = COCOeval(coco, coco_pred, 'keypoints')
-        else:
-            raise ValueError('not support to compute accuracy for %s. Expected subnet name in [detection, keypoints]' %self.params.subnet_name)
-        coco_eval.params.imgIds = img_ids
-        coco_eval.evaluate()
-        coco_eval.accumulate()
-        coco_eval.summarize()
-
-        if not self.params.testresult_write_json:
-            os.remove(ann_filename)
-
-    def test(self):
-
-        # img_list = os.listdir(self.params.testdata_dir)
-        multipose_results = []
-        cap = cv2.VideoCapture(self.params.video_path)
-        out = cv2.VideoWriter(self.params.output_path, cv2.VideoWriter_fourcc(*'MJPG'), 30, (1280, 720))
-        while True:
-            _, img = cap.read()
-            if img is None:
-                break
-            shape_dst = np.max(img.shape)
-            scale = float(shape_dst) / self.params.inp_size
-            pad_size = np.abs(img.shape[1] - img.shape[0])
-            img_resized = np.pad(img, ([0, pad_size], [0, pad_size], [0, 0]), 'constant')[:shape_dst, :shape_dst]
-            img_resized = cv2.resize(img_resized, (self.params.inp_size, self.params.inp_size))
-            img_input = resnet_preprocess(img_resized)
-            img_input = torch.from_numpy(np.expand_dims(img_input, 0))
-
-            with torch.no_grad():
-                img_input = img_input.cuda()
-            heatmaps, [scores, classification, transformed_anchors] = self.model.module._predict_bboxANDkeypoints(img_input)
-            heatmaps = heatmaps.cpu().detach().numpy()
-            heatmaps = np.squeeze(heatmaps, 0)
-            heatmaps = np.transpose(heatmaps, (1, 2, 0))
-            heatmap_max = np.max(heatmaps[:, :, :18], 2)
-            # segment_map = heatmaps[:, :, 17]
-            param = {'thre1': 0.1, 'thre2': 0.05, 'thre3': 0.5}
-            joint_list = get_joint_list(img_resized, param, heatmaps[:, :, :18], scale)
-            joint_list = joint_list.tolist()
-            del img_resized
-
-            joints = []
-            for joint in joint_list:
-                if int(joint[-1]) != 1:
-                    joint[-1] = max(0, int(joint[-1]) - 1)
-                    joints.append(joint)
-            joint_list = joints
-
-            # bounding box from retinanet
-            scores = scores.cpu().detach().numpy()
-            classification = classification.cpu().detach().numpy()
-            transformed_anchors = transformed_anchors.cpu().detach().numpy()
-            idxs = np.where(scores > 0.5)
-            bboxs=[]
-            for j in range(idxs[0].shape[0]):
-                bbox = transformed_anchors[idxs[0][j], :]*scale
-                if int(classification[idxs[0][j]]) == 0:  # class0=people
-                    bboxs.append(bbox.tolist())
-            print(len(bboxs))
-            img_name = ''
-            prn_result = self.prn_process(joint_list, bboxs, img_name)
-            for result in prn_result:
-                multipose_results.append(result)
-
-            if self.params.testresult_write_image:
-                canvas = plot_result(img, prn_result)
-                # cv2.imwrite(os.path.join(self.params.testresult_dir, img_name.split('.', 1)[0] + '_1heatmap.png'), heatmap_max * 256)
-                # cv2.imwrite(os.path.join(self.params.testresult_dir, img_name.split('.', 1)[0] + '_2canvas.png'), canvas)
-                canvas = cv2.resize(canvas, (1280, 720))
-                out.write(canvas)
-
-        # if self.params.testresult_write_json:
-        #     with open(self.params.testresult_dir+'multipose_results.json', "w") as f:
-        #         json.dump(multipose_results, f)
 
     def _get_multiplier(self, img):
         """Computes the sizes of image at different scales
@@ -251,7 +111,7 @@ class Tester(object):
         """Computes the averaged heatmap and paf for the given image
         :param multiplier:
         :param origImg: numpy array, the image being processed
-        :param model: pytorch model
+        :param convert: pytorch convert
         :returns: numpy arrays, the averaged paf and heatmap
         """
 
@@ -271,7 +131,7 @@ class Tester(object):
             with torch.no_grad():
                 im_data = torch.from_numpy(im_data).type(torch.FloatTensor).cuda(device=self.params.gpus[0])
 
-            # heatmaps, [scores, classification, transformed_anchors] = self.model([im_data, self.params.subnet_name])
+            # heatmaps, [scores, classification, transformed_anchors] = self.convert([im_data, self.params.subnet_name])
             heatmaps, [scores, classification, transformed_anchors] = self.model.module._predict_bboxANDkeypoints(im_data)
             heatmaps = heatmaps.cpu().detach().numpy().transpose(0, 2, 3, 1)
             scores = scores.cpu().detach().numpy()
@@ -383,7 +243,7 @@ class Tester(object):
         for j in range(weights_bbox.shape[0]):
             inp = weights_bbox[j, :, :, 0, :]
             input = torch.from_numpy(np.expand_dims(inp, axis=0)).cuda().float()
-            # output, _ = self.model([input, 'prn_subnet'])
+            # output, _ = self.convert([input, 'prn_subnet'])
             output = self.model.module._predict_prn(input)
             temp = np.reshape(output.data.cpu().numpy(), (56, 36, 17))
             output_bbox.append(temp)
@@ -494,36 +354,6 @@ class Tester(object):
             prn_result.append(image_data)
 
         return prn_result
-
-    def val(self):
-        self.model.eval()
-        logs = OrderedDict()
-        sum_loss = meter_utils.AverageValueMeter()
-        logger.info('Val on validation set...')
-
-        self.batch_timer.clear()
-        self.data_timer.clear()
-        self.batch_timer.tic()
-        self.data_timer.tic()
-        for step, batch in enumerate(self.val_data):
-            self.data_timer.toc()
-
-            inputs, gts, _ = self.batch_processor(self, batch)
-            _, saved_for_loss = self.model(*inputs)
-            self.batch_timer.toc()
-
-            loss, saved_for_log = self.model.module.build_loss(saved_for_loss, *gts)
-            sum_loss.add(loss.item())
-            self._process_log(saved_for_log, logs)
-
-            if step % self.params.print_freq == 0:
-                self._print_log(step, logs, 'Validation', max_n_batch=len(self.val_data))
-
-            self.data_timer.tic()
-            self.batch_timer.tic()
-
-        mean, std = sum_loss.value()
-        logger.info('\n\nValidation loss: mean: {}, std: {}'.format(mean, std))
 
     def _load_ckpt(self, ckpt):
         _, _ = net_utils.load_net(ckpt, self.model, load_state_dict=True)

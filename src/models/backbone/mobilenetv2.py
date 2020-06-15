@@ -1,6 +1,5 @@
 import torch.nn as nn
 import math
-import torch.nn.functional as F
 
 class InvertedResidual(nn.Module):
     def __init__(self, inp, out, stride, expand_ratio):
@@ -78,26 +77,7 @@ class MobilenetV2(nn.Module):
         x = self.layer7(x)
         c5 = self.my_conv4(x)
 
-        p6 = self.conv6(c5)
-        p7 = self.conv7(F.relu(p6))
-        p5 = self.latlayer1(c5)
-        p4 = self._upsample_add(p5, self.latlayer2(c4))
-        p3 = self._upsample_add(p4, self.latlayer3(c3))
-        p5 = self.toplayer0(p5)
-        p4 = self.toplayer1(p4)
-        p3 = self.toplayer2(p3)
-
-        # pure fpn for keypoints estimation
-        fp5 = self.toplayer(c5)
-        fp4 = self._upsample_add(fp5, self.flatlayer1(c4))
-        fp3 = self._upsample_add(fp4, self.flatlayer2(c3))
-        fp2 = self._upsample_add(fp3, self.flatlayer3(c2))
-        # Smooth
-        fp4 = self.smooth1(fp4)
-        fp3 = self.smooth2(fp3)
-        fp2 = self.smooth3(fp2)
-
-        return [[fp2, fp3, fp4, fp5], [p3, p4, p5, p6, p7]]
+        return c2, c3, c4, c5
 
     def make_divisible(self, v, divisor, min_value=None):
         """

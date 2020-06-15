@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import os
-import sys
 import datetime
 import numpy as np
 from collections import OrderedDict
@@ -17,7 +16,7 @@ from utils.lib.utils.timer import Timer
 from utils.lib.utils.path import mkdir
 from utils.lib.utils import meter as meter_utils
 import src.utils.net_utils as net_utils
-from src.datasets.data_parallel import ListDataParallel
+from src.datasets.utils.data_parallel import ListDataParallel
 from src.utils.utils import TrainParams
 
 
@@ -60,11 +59,7 @@ class Trainer(object):
         self.batch_processor = batch_processor
         self.batch_per_epoch = len(self.train_data)
 
-        # set CUDA_VISIBLE_DEVICES=gpus
-        # gpus = ','.join([str(x) for x in self.params.gpus])
-        # os.environ['CUDA_VISIBLE_DEVICES'] = gpus
         self.params.gpus = tuple(range(len(self.params.gpus)))
-        # logger.info('Set CUDA_VISIBLE_DEVICES to {}...'.format(gpus))
 
         # Optimizer and learning rate
         self.last_epoch = 0
@@ -84,7 +79,7 @@ class Trainer(object):
         self.batch_timer = Timer()
         self.data_timer = Timer()
 
-        # load model
+        # load convert
         self.model = model
         ckpt = self.params.ckpt
         if not self.params.save_dir:
@@ -128,13 +123,13 @@ class Trainer(object):
             for fun in self.on_end_epoch_hooks:
                 fun(self)
 
-            # save model
+            # save convert
             if (self.last_epoch % self.params.save_freq_epoch == 0) or (self.last_epoch == self.params.max_epoch - 1):
                 save_name = 'ckpt_{}.h5'.format(self.last_epoch)
                 save_to = os.path.join(self.params.save_dir, save_name)
                 self._save_ckpt(save_to)
 
-                # find best model
+                # find best convert
                 if self.params.val_nbatch_end_epoch > 0:
                     val_loss = self._val_one_epoch(self.params.val_nbatch_end_epoch)
                     if val_loss < best_loss:

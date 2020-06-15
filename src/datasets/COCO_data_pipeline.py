@@ -5,14 +5,14 @@ import cv2
 import numpy as np
 
 import torch
-from src.datasets.coco_data.heatmap import putGaussianMaps
-from src.datasets.coco_data.ImageAugmentation import (aug_croppad, aug_flip, aug_rotate, aug_scale,
+from src.datasets.utils.heatmap import putGaussianMaps
+from src.datasets.utils.ImageAugmentation import (aug_croppad, aug_flip, aug_rotate, aug_scale,
                                                   aug_croppad_bbox, aug_flip_bbox, aug_rotate_bbox, aug_scale_bbox)
-from src.datasets.coco_data.preprocessing import resnet_preprocess
-from torch.utils.data import DataLoader, Dataset
+from src.datasets.utils.preprocessing import resnet_preprocess
+from torch.utils.data import Dataset
 from functools import partial, reduce
 
-from pycocotools.coco import COCO, maskUtils
+from pycocotools.coco import maskUtils
 
 '''
 train2014  : 82783 simages
@@ -275,7 +275,7 @@ class Cocokeypoints(Dataset):
         heat_mask, heatmaps = self.get_ground_truth(
             meta_data, mask_miss)
 
-        # image preprocessing, which comply the model
+        # image preprocessing, which comply the convert
         # trianed on Imagenet dataset
         if self.preprocess == 'resnet':
             img = resnet_preprocess(img)
@@ -428,7 +428,7 @@ class Cocobbox(Dataset):
 
         extracted_bbox = self.get_ground_truth(meta_data, self.instance_info_list[index])
 
-        # image preprocessing, which comply the model
+        # image preprocessing, which comply the convert
         # trianed on Imagenet dataset
         if self.preprocess == 'resnet':
             img = resnet_preprocess(img)
