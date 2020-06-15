@@ -101,7 +101,7 @@ def frozen_weights(model, cfg):
     return model
 class TrainParams(object):
     # required params
-    exp_name = 'experiment_name'
+    backbone = 'mobilenetv2'
     subnet_name = 'keypoint_subnet'
     batch_size = 32
     max_epoch = 30
@@ -134,7 +134,6 @@ class TrainParams(object):
     # visualization
     print_freq = 20             # print log per `print_freq` steps
     use_tensorboard = False     # use tensorboardX if True
-    visualization_fn = None     # custom function to handle `log_dict`, default value is `default_visualization_fn`
 
     def update(self, params_dict):
         state_dict = self.state_dict()
@@ -166,6 +165,7 @@ def init_train_params(cfg):
 
     params.gpus = cfg['COMMON']['GPUS']
 
+    params.backbone = cfg['MODEL']['backbone']
     params.subnet_name = cfg['MODEL']['subnet']
     params.max_epoch = cfg['TRAIN']['num_epochs']
     params.batch_size = cfg['TRAIN']['batch_size'] * len(params.gpus)
@@ -200,7 +200,7 @@ class TestParams(object):
 
     # # required params
     inp_size = 480  # input size 480*480
-    exp_name = 'multipose101'
+    # exp_name = 'multipose101'
     subnet_name = 'keypoints'
     batch_size = 32
     print_freq = 20
@@ -209,6 +209,7 @@ def init_Test_params(cfg):
     params.gpus = cfg['COMMON']['GPUS']
     params.ckpt = cfg['VAL']['ckpt']
     params.coco_root = cfg['DATASET']['coco_root']
+    params.backbone = cfg['MODEL']['backbone']
 
     if cfg['VAL']['dataset_type'] == 'val':
         params.subnet_name = cfg['MODEL']['subnet']

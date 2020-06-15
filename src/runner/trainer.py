@@ -18,7 +18,7 @@ from utils.lib.utils import meter as meter_utils
 import src.utils.net_utils as net_utils
 from src.datasets.utils.data_parallel import ListDataParallel
 from src.utils.utils import TrainParams
-
+from torch.utils.tensorboard import SummaryWriter
 
 def get_learning_rates(optimizer):
     lrs = [pg['lr'] for pg in optimizer.param_groups]
@@ -83,7 +83,7 @@ class Trainer(object):
         self.model = model
         ckpt = self.params.ckpt
         if not self.params.save_dir:
-            self.params.save_dir = os.path.join('outputs', self.params.exp_name)
+            self.params.save_dir = os.path.join('outputs', self.params.subnet_name)
         mkdir(self.params.save_dir)
         logger.info('Set output dir to {}'.format(self.params.save_dir))
         if ckpt is None:
@@ -103,6 +103,7 @@ class Trainer(object):
         if self.params.subnet_name != 'keypoint_subnet':
             self.model.module.freeze_bn()  # nn.BatchNorm2d.eval() if not 'keypoint_subnet'
 
+        self.writer = SummaryWriter(log_dir='demo/log_file/{}_{}'.format(self.params.backbone, self.params.subnet_name))
     def train(self):
         best_loss = np.inf
         for epoch in range(self.last_epoch, self.params.max_epoch):
@@ -119,7 +120,8 @@ class Trainer(object):
                 logger.info('Set learning rates from {} to {}'.format(cur_lrs, get_learning_rates(self.optimizer)))
 
             train_loss = self._train_one_epoch()
-
+            if self.params.use_tensorboard:
+                self.writer.add_scalar('Loss', train_loss)
             for fun in self.on_end_epoch_hooks:
                 fun(self)
 
@@ -142,7 +144,8 @@ class Trainer(object):
 
                     if isinstance(self.lr_scheduler, ReduceLROnPlateau):
                         self.lr_scheduler.step(val_loss, self.last_epoch)
-
+        if self.params.use_tensorboard:
+            self.writer.close()
     def _save_ckpt(self, save_to):
         model = self.model.module if isinstance(self.model, nn.DataParallel) else self.model
         net_utils.save_net(save_to, model, epoch=self.last_epoch,
@@ -259,7 +262,7 @@ class Trainer(object):
                 dest_dict[k] = v
 
     def _print_log(self, step, log_values, title='', max_n_batch=None):
-        log_str = '{}\n'.format(self.params.exp_name)
+        log_str = '{}\n'.format(self.params.subnet_name)
         log_str += '{}: epoch {}'.format(title, self.last_epoch)
 
         if max_n_batch:

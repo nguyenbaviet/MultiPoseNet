@@ -367,7 +367,7 @@ class Base(object):
                 dest_dict[k] = v
 
     def _print_log(self, step, log_values, title='', max_n_batch=None):
-        log_str = '{}\n'.format(self.params.exp_name)
+        log_str = '{}\n'.format(self.params.subnet_name)
         log_str += '{}: epoch {}'.format(title, 0)
 
         log_str += '[{}/{}]'.format(step, max_n_batch)
