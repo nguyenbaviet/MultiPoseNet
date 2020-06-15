@@ -1,6 +1,6 @@
 COMMON:
   GPUS: [0, 1, 2]
-  saved_dir: '/home/vietnguyen/MultiPoseNet/extra/models/resnet50_detection_subnet/'
+  saved_dir: '/home/vietnguyen/refactor/demo/models/mobilenetv2_keypoints_subnet/'
 DATASET:
   data_dir: '/mnt/hdd10tb/Datasets/COCO2017/images'
   mask_dir: '/mnt/hdd10tb/Datasets/COCO2017/viet_data/'
@@ -18,29 +18,29 @@ FROZEN_WEIGHTS_LIST:
                   'upsample2', 'upsample3', 'conv2', 'convfin', 'convfin_k2', 'convfin_k3', 'convfin_k4', 'convfin_k5']
   prn: ['prn']
 
-FROZEN_MODULES: ['prn', 'detection']
+FROZEN_MODULES: ['detection', 'prn'] # backbone, detection, prn, keypoints
 
 MODEL:
   subnet: 'keypoints'
-  backbone: 'mobilenetv2'
+  backbone: 'mobilenetv2' #mobilenetV2, resnet101, resnet50
   inp_size: 480 #kp + prn - 480, detection - 608
   feat_stride: 4
 
 TRAIN:
-  num_epochs: 2
-  batch_size: 8
+  num_epochs: 80
+  batch_size: 12 #keypoints: 12
   optimizer: 'adam'
   weight_decay: 0.000
   init_lr: 0.0001
   lr_decay: 0.1
 
-  ckpt: '/home/vietnguyen/MultiPoseNet/extra/models/res50_detection_subnet/final_ckpt.h5'
-  re_init: false
+  ckpt: '/home/vietnguyen/refactor/demo/models/mobilenetv2_keypoints_subnet/ckpt_2.h5'
+  re_init: true
   ignore_opt_state: false
 
   val_nbatch_end_epoch: 2000
 
   print_freq: 50
-  use_tensorboard: false
+  use_tensorboard: true
 
   num_of_keypoints: 3 #minimum number of keypoints for training PRN

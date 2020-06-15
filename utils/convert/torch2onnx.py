@@ -1,7 +1,6 @@
 import sys, os
 sys.path.append(os.getcwd())
 
-import argparse
 from src.models.convert.detectionANDkeypoints import detectionANDkeypoints
 from src.models.convert.prn import _PRN
 from src.utils.net_utils import load_net
@@ -9,7 +8,10 @@ from utils.convert._utils import export_onnx
 import yaml
 
 def main(cfg):
-    print("===> creating convert {} with backbone '{}'".format(cfg['model'], cfg['backbone']))
+    """
+    TO DO: convert onnx with opset = 10
+    """
+    print("===> creating model {} with backbone '{}'".format(cfg['model'], cfg['backbone']))
     if cfg['model'] == 'detectionANDkeypoints':
         model = detectionANDkeypoints(cfg['backbone'])
     else:
@@ -25,8 +27,8 @@ def main(cfg):
     else:
         print("=> no checkpoint found at '{}'".format(cfg['checkpoint']))
     model.eval()
-    export_onnx(model, cfg['output_path'])
-
+    export_onnx(model, cfg['output_path'], type=cfg['model'])
+    print('Converted!')
 if __name__ == '__main__':
     with open('configs/convert_onnx.yaml') as f:
         cfg = yaml.full_load(f)

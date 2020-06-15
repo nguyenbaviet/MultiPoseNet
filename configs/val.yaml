@@ -13,7 +13,7 @@ MODEL:
 
 VAL:
   ckpt: '/home/vietnguyen/MultiPoseNet/extra/models/res50_detection_subnet/final_ckpt.h5'
-  measure: 'accuracy' #accuracy
+  measure: 'accuracy' #accuracy or loss
   batch_size: 25
   num_of_keypoints: 3
-  dataset_type: 'val' #train
+  dataset_type: 'val' #test

@@ -74,6 +74,7 @@ class Tester(Base):
                 # cv2.imwrite(os.path.join(self.params.testresult_dir, img_name.split('.', 1)[0] + '_2canvas.png'), canvas)
                 canvas = cv2.resize(canvas, (1280, 720))
                 out.write(canvas)
+        print(id)
         print('FPS: ', id / (time.time() - start))
         # if self.params.testresult_write_json:
         #     with open(self.params.testresult_dir+'multipose_results.json', "w") as f:

@@ -8,7 +8,7 @@ DATASET:
 MODEL:
   inp_size: 480
   feat_stride: 4
-  backbone: 'resnet50'
+  backbone: 'resnet101'
 VAL:
   ckpt: '/home/vietnguyen/MultiPoseNet/extra/models/res50_detection_subnet/final_ckpt.h5'
   output_path: '/home/vietnguyen/refactor/demo/output/output.avi'

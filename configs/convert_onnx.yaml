@@ -1,4 +1,4 @@
-model: 'detectionANDkeypoints' #prn
-backbone: 'resnet101'
-output_path: 'resnet101.onnx'
-checkpoint: './demo/models/ckpt_baseline_resnet101.h5'
+model: 'detectionANDkeypoints' #prn or detectionANDkeypoints
+backbone: 'mobilenetv2'
+output_path: '/home/vietnguyen/refactor/demo/convert/onnx/mobilenetv2_detectANDkps.onnx'
+checkpoint: '/home/vietnguyen/refactor/demo/models/mobilenetv2_prn_subnet/ckpt_1_0.00280.h5.best'
