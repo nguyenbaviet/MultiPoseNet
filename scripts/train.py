@@ -57,7 +57,7 @@ def main(cfg):
 
         val_data = Cocokeypoints(root=root, mask_dir=mask_dir, index_list=val_indexes, data=data, inp_size=inp_size,
                                  feat_stride=feat_stride, preprocess='resnet', transform=ToTensor())
-        val_data = sDataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=8)
+        val_data = sDataLoader(val_data, batch_size=int(batch_size / 2), shuffle=False, num_workers=8)
     elif params.subnet_name == 'detection':
         with open(cfg['DATASET']['json_path']) as f:
             data = json.load(f)

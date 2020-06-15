@@ -31,7 +31,8 @@ class AverageValueMeter(Meter):
             return self.sum, np.inf
         else:
             mean = self.sum / n
-            std = math.sqrt((self.var - n * mean * mean) / (n - 1.0))
+            # std = math.sqrt((self.var - n * mean * mean) / (n - 1.0))
+            std = math.sqrt(math.fabs((self.var - n * mean * mean) / (n - 1.0)))
         return mean, std
 
     def reset(self):
