@@ -121,7 +121,7 @@ class Trainer(object):
 
             train_loss = self._train_one_epoch()
             if self.params.use_tensorboard:
-                self.writer.add_scalar('Loss', train_loss)
+                self.writer.add_scalar('Loss', train_loss, epoch)
             for fun in self.on_end_epoch_hooks:
                 fun(self)
 
