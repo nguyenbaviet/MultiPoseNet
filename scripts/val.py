@@ -38,7 +38,7 @@ def main(cfg):
     mask_dir = cfg['DATASET']['mask_dir']
     inp_size = cfg['MODEL']['inp_size']
     feat_stride = cfg['MODEL']['feat_stride']
-    batch_size = cfg['TRAIN']['batch_size'] * len_gpu
+    batch_size = cfg['VAL']['batch_size'] * len_gpu
     if params.subnet_name == 'keypoints':
         with open(cfg['DATASET']['json_path']) as f:
             data = json.load(f)
@@ -80,6 +80,7 @@ def main(cfg):
     print('val dataset len: {}'.format(len(val_data.dataset)))
 
     evaluator = Evaluator(model, params, batch_processor, val_data)
+
     if cfg['VAL']['measure'] == 'loss':
         evaluator.val()
     elif cfg['VAL']['measure'] == 'accuracy':

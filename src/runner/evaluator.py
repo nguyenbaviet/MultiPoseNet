@@ -17,7 +17,6 @@ class Evaluator(Base):
         coco_val = os.path.join(self.params.coco_root, 'annotations/person_keypoints_val2017.json')
         coco = COCO(coco_val)
         img_ids = coco.getImgIds(catIds=[1])
-
         multipose_results = []
         coco_order = [0, 14, 13, 16, 15, 4, 1, 5, 2, 6, 3, 10, 7, 11, 8, 12, 9]
 
@@ -79,8 +78,8 @@ class Evaluator(Base):
         coco_eval.accumulate()
         coco_eval.summarize()
 
-        if not self.params.testresult_write_json:
-            os.remove(ann_filename)
+        # if not self.params.testresult_write_json:
+        #     os.remove(ann_filename)
 
     def val(self):
         self.model.eval()

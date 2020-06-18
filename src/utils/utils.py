@@ -106,6 +106,7 @@ class TrainParams(object):
     batch_size = 32
     max_epoch = 30
     optimizer = None
+    last_epoch = 0
 
     # learning rate scheduler
     lr_scheduler = None         # should be an instance of ReduceLROnPlateau or _LRScheduler
@@ -171,6 +172,7 @@ def init_train_params(cfg):
     params.batch_size = cfg['TRAIN']['batch_size'] * len(params.gpus)
     params.init_lr = cfg['TRAIN']['init_lr']
     params.lr_decay = cfg['TRAIN']['lr_decay']
+    params.last_epoch = cfg['TRAIN']['last_epoch']
 
     params.save_dir = cfg['COMMON']['saved_dir']
     params.ckpt = cfg['TRAIN']['ckpt']
@@ -214,8 +216,8 @@ def init_Test_params(cfg):
     if cfg['VAL']['dataset_type'] == 'val':
         params.subnet_name = cfg['MODEL']['subnet']
         params.batch_size = cfg['VAL']['batch_size']
+        params.coco_result_filename = cfg['VAL']['json_result_path']
     else:
         params.output_path = cfg['VAL']['output_path']
         params.video_path = cfg['VAL']['video_path']
-        params.coco_result_filename = cfg['VAL']['json_result_path']
     return params

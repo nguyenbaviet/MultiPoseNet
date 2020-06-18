@@ -62,7 +62,7 @@ class Trainer(object):
         self.params.gpus = tuple(range(len(self.params.gpus)))
 
         # Optimizer and learning rate
-        self.last_epoch = 0
+        self.last_epoch = params.last_epoch
         self.optimizer = self.params.optimizer  # type: Optimizer
         if not isinstance(self.optimizer, Optimizer):
             logger.error('optimizer should be an instance of Optimizer, '
@@ -121,7 +121,7 @@ class Trainer(object):
 
             train_loss = self._train_one_epoch()
             if self.params.use_tensorboard:
-                self.writer.add_scalar('Loss', train_loss, epoch)
+                self.writer.add_scalar('Train loss', train_loss, self.last_epoch)
             for fun in self.on_end_epoch_hooks:
                 fun(self)
 
@@ -134,6 +134,8 @@ class Trainer(object):
                 # find best convert
                 if self.params.val_nbatch_end_epoch > 0:
                     val_loss = self._val_one_epoch(self.params.val_nbatch_end_epoch)
+                    if self.params.use_tensorboard:
+                        self.writer.add_scalar('Val loss', val_loss, self.last_epoch)
                     if val_loss < best_loss:
                         best_file = os.path.join(self.params.save_dir,
                                                  'ckpt_{}_{:.5f}.h5.best'.format(self.last_epoch, val_loss))
@@ -156,7 +158,7 @@ class Trainer(object):
         epoch, state_dicts = net_utils.load_net(ckpt, self.model, load_state_dict=True)
         epoch = 0
         if not self.params.ignore_opt_state and not self.params.zero_epoch and epoch >= 0:
-            self.last_epoch = epoch
+            # self.last_epoch = epoch
             logger.info('Set last epoch to {}'.format(self.last_epoch))
             if state_dicts is not None:
                 self.optimizer.load_state_dict(state_dicts[0])
@@ -181,6 +183,7 @@ class Trainer(object):
             loss, saved_for_log = self.model.module.build_loss(saved_for_loss, *gts)
 
             # backward
+            loss.requires_grad = True
             self.optimizer.zero_grad()
             loss.backward()
             total_loss.add(loss.item())
